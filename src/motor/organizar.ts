@@ -4,7 +4,7 @@ import { idCor, norm } from './ids.ts';
 import { limparSite, linkOk, termoPadrao } from './lojas.ts';
 import { APAGAR, LIMITES, type Consultorio, type Cor, type Escritas, type Item } from './tipos.ts';
 
-export type Resultado = { erro: string } | { erro?: undefined; escritas: Escritas; id: string };
+export type Resultado = { erro: string; escritas?: undefined; id?: undefined } | { erro?: undefined; escritas: Escritas; id: string };
 
 const corta = (t: string, n: number): string => t.replace(/\s+/g, ' ').trim().slice(0, n);
 const diff = (e: Escritas, caminho: string, novo: unknown, antigo: unknown): void => { if (novo !== antigo) e[caminho] = novo; };

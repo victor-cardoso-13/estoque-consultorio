@@ -16,6 +16,9 @@ export function posicionarAviso(): void {
   elAviso.style.bottom = topo ? `${Math.max(8, Math.round(window.innerHeight - topo + 8))}px` : '';
 }
 
+/** Some na hora (ao abrir uma janela, para não ficar por cima dela). */
+export function esconderAviso(): void { elAviso?.classList.remove('on'); }
+
 export function montarAviso(el: HTMLElement) {
   elAviso = el;
   const tx = el.querySelector('span')!, bt = el.querySelector('button')!;
