@@ -25,10 +25,11 @@ export const DOCUMENTOS: Documento[] = [
     ],
   },
   {
-    id: 'atestado', nome: 'Atestado', meta: 'Em branco · A5',
+    id: 'atestado', nome: 'Atestado', meta: 'Em branco · A4 ou A5',
     nota: 'Texto padrão com horário, dias de convalescença e CID (só com autorização do paciente).',
     previa: 'previas/Atestado-A5.png',
     formatos: [
+      { rotulo: 'A4 · 1 por folha', arquivo: 'A4/Atestado-A4.pdf' },
       { rotulo: 'A5 · talão', arquivo: 'A5/Atestado-A5.pdf' },
       { rotulo: 'A5 · 2 por folha A4', arquivo: 'A5/Atestado-2-por-folha-A4.pdf' },
     ],
