@@ -8,8 +8,8 @@
 :root {
   --tinta: #3b2f2a;
   --creme: #fbf6ee;
-  --ambar: #e7a400;
-  --ambar-claro: #f3c969;
+  --ambar: #e8a33d;
+  --ambar-claro: #fde6bd;
   --titulo: 'Fredoka', 'Nunito', system-ui, sans-serif;
 }
 * { box-sizing: border-box; }
