@@ -11,3 +11,6 @@ WhatsApp Image*
 *.jpeg
 PROMPT-*.md
 prints/
+
+# pacote da identidade (os PDFs já estão em public/documentos)
+*.zip

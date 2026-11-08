@@ -27,10 +27,10 @@ export function telaComprar(): string {
         const link = linkDoProduto(cs, l, u);
         return `<a class="loja-bt ${link ? 'salvo' : ''}" href="${e(endereco(cs, l, u))}" target="_blank" rel="noopener">${link ? '★ ' : ''}${e(curto(l.nome))} ↗</a>`;
       }).join('')}<button class="link-bt2" data-link="${e(u.k)}">✎ ${ajustada ? 'busca ajustada' : 'ajustar busca'}</button></div>` : ''}</div>`;
-  }).join('') : `<div class="tudo-ok">✅ Nada no mínimo.<br>Quando algo chegar no mínimo, aparece aqui sozinho.</div>`;
+  }).join('') : `<div class="tudo-ok">Nada no mínimo.<br>Quando algo chegar no mínimo, aparece aqui sozinho.</div>`;
   h += `<button class="link-bt" id="outro">+ Pôr outro material na lista</button>`;
   if (C.length) {
-    h += `<div class="grupo"><h3>🚚 A caminho</h3>${C.map(u => {
+    h += `<div class="grupo"><h3>A caminho</h3>${C.map(u => {
       const c = cs.caminho[u.k]!, l = cs.lojas[c.loja];
       return `<div class="compra caminho"><div class="l1"><span class="e">${e(u.item.ic)}</span><div class="tx"><b>${e(u.nome)}</b><small>pedi ${fmt(c.q, u.item.un)} na ${e(l ? l.nome : 'loja')} · ${haQuanto(c.quando, dia)}</small></div></div>
         <div class="l2"><button class="link-bt" data-naoveio="${e(u.k)}">Não veio</button><button class="chegou" style="flex:1" data-chegou="${e(u.k)}">Chegou ✓</button></div></div>`;

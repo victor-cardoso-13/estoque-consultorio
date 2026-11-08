@@ -14,7 +14,7 @@ export function telaEstoque(): void {
   const c = $('conteudo');
   if (c.dataset.tela !== 'estoque') {
     c.dataset.tela = 'estoque';
-    c.innerHTML = `<div class="busca"><input id="busca" type="search" placeholder="🔎 Procurar material" value="${e(S.filtro)}" autocomplete="off" aria-label="Procurar material"></div><div id="topoEst"></div><div id="gradeEst"></div>`;
+    c.innerHTML = `<div class="busca"><input id="busca" type="search" placeholder="Procurar material" value="${e(S.filtro)}" autocomplete="off" aria-label="Procurar material"></div><div id="topoEst"></div><div id="gradeEst"></div>`;
   }
   $('topoEst').outerHTML = `<div id="topoEst" style="display:contents">${topo()}</div>`;
   desenharGrade();
@@ -24,11 +24,11 @@ function topo(): string {
   const cs = S.c!, dia = hoje();
   const vl = venceLogo(cs, dia);
   const nenhuma = unidades(cs).every(u => u.o.qtd === null);
-  return `${vl.length ? `<div class="alerta"><h3>⏳ Vence logo</h3>${vl.map(u => {
+  return `${vl.length ? `<div class="alerta"><h3>Vence logo</h3>${vl.map(u => {
     const d = diasVence(u, dia)!;
     return `<button class="${d < 0 ? 'vencido' : ''}" data-ajusta="${e(u.k)}"><span>${e(u.item.ic)}</span><span class="tx">${e(u.nome)}</span><small>${textoVence(d)} · ${ddmm(u.o.vence!)}</small></button>`;
   }).join('')}</div>` : ''}
-    <button class="contar-bt ${nenhuma ? 'destaque' : ''}" id="contar">📋 Contar o estoque</button>
+    <button class="contar-bt ${nenhuma ? 'destaque' : ''}" id="contar">Contar o estoque</button>
     <nav class="pulos" id="pulos">${listarGrupos(cs).map(g => `<button class="pulo" data-pula="${e(g.id)}">${e(g.ic)} ${e(g.nome)}</button>`).join('')}</nav>`;
 }
 

@@ -6,6 +6,7 @@
 import { foraDaLista, lojasComSite, pediNaLoja, pedir } from '../motor/compras.ts';
 import { chegou, definirQuantidade, ordemContar, inicioContar, unidadeDe } from '../motor/estoque.ts';
 import { diaValido } from '../motor/datas.ts';
+import { achar } from '../motor/documentos.ts';
 import { FIGURINHAS, ultimoEmoji } from '../motor/emoji.ts';
 import { norm, novoId } from '../motor/ids.ts';
 import { termoBase, termoPadrao } from '../motor/lojas.ts';
@@ -28,6 +29,7 @@ type Folha =
   | { tipo: 'link'; k: string; termo: string; v: Record<string, string>; erro: string }
   | { tipo: 'loja'; id: string | null; nome: string; site: string; erro: string }
   | { tipo: 'outro' }
+  | { tipo: 'documento'; id: string; i: number }
   | { tipo: 'grupo'; id: string | null; nome: string; ic: string; erro: string }
   | { tipo: 'editar'; novo: boolean; d: Dados; erro: string };
 
@@ -126,6 +128,17 @@ function corpo(f: Folha): string {
       ${f.id && Object.keys(cs.lojas).length > 1 ? '<button class="perigo" data-acao="apagarLoja">Apagar esta loja</button>' : ''}
       <button class="cancela" data-acao="fechar">Cancelar</button>`;
   }
+  if (f.tipo === 'documento') {
+    const d = achar(f.id);
+    if (!d) return '<p>Esse documento não existe mais.</p><button class="cancela" data-acao="fechar">Fechar</button>';
+    const fm = d.formatos[Math.min(f.i, d.formatos.length - 1)]!;
+    return `<h2>${e(d.nome)}</h2>
+      <div class="previa"><img src="documentos/${e(d.previa)}" alt="Prévia de ${e(d.nome)}"><div class="d"><p>${e(d.nota)}</p><p>Papel: ${e(fm.rotulo)}</p></div></div>
+      ${d.formatos.length > 1 ? `<div class="rot">Formato</div><div class="chips">${d.formatos.map((x, i) => `<button class="chip ${i === f.i ? 'sel' : ''}" data-fmt="${i}">${e(x.rotulo)}</button>`).join('')}</div>` : ''}
+      <a class="ok principal" id="imprimir" href="documentos/${e(fm.arquivo)}" target="_blank" rel="noopener">Imprimir</a>
+      <p class="dica" style="text-align:center">No celular, abre o PDF pronto. Toque em Compartilhar e depois em Imprimir (AirPrint), ou salve nos Arquivos.</p>
+      <button class="cancela" data-acao="fechar">Fechar</button>`;
+  }
   if (f.tipo === 'outro') {
     const fora = foraDaLista(cs);
     return `<h2>Pôr na lista</h2><p class="dica">Para comprar algo que ainda não chegou no mínimo (uma promoção, um material que vai usar muito na semana).</p>
@@ -209,6 +222,7 @@ export function abrirLoja(id: string | null): void {
   abrir({ tipo: 'loja', id: l ? id : null, nome: l?.nome ?? '', site: l?.site ?? '', erro: '' });
 }
 export function abrirOutro(): void { abrir({ tipo: 'outro' }); }
+export function abrirDocumento(id: string): void { if (achar(id)) abrir({ tipo: 'documento', id, i: 0 }); }
 export function abrirGrupo(id: string | null): void {
   const g = id ? S.c!.grupos[id] : null;
   abrir({ tipo: 'grupo', id: g ? id : null, nome: g?.nome ?? '', ic: g?.ic ?? '🗂️', erro: '' });
@@ -333,6 +347,7 @@ export function aoClicarNaFolha(ev: MouseEvent): void {
     else if (f.tipo === 'ajustar' || f.tipo === 'chegou' || f.tipo === 'comprei') f.q = inteiro(f.q + d);
     desenhar(); return;
   }
+  if (ds.fmt !== undefined && f.tipo === 'documento') { f.i = Number(ds.fmt) || 0; desenhar(); return; }
   if ('limpaData' in ds) {
     if (f.tipo === 'contar') { f.vence = ''; f.mexeu = true; } else if (f.tipo === 'ajustar' || f.tipo === 'chegou') f.vence = '';
     desenhar(); return;

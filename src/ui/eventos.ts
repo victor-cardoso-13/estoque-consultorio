@@ -6,7 +6,7 @@ import { fmt } from '../motor/unidades.ts';
 import { fazer, render, S, avisar, type Aba, type Segmento } from './estado.ts';
 import { desenharGrade } from './tela-estoque.ts';
 import {
-  abrirAjustar, abrirChegou, abrirComprei, abrirContar, abrirEditar, abrirGrupo, abrirLink, abrirLoja, abrirOutro,
+  abrirAjustar, abrirChegou, abrirComprei, abrirContar, abrirDocumento, abrirEditar, abrirGrupo, abrirLink, abrirLoja, abrirOutro,
   aoApertarEnter, aoClicarNaFolha, aoDigitarNaFolha, folhaAberta,
 } from './folhas.ts';
 import { mudarPedido, pedir } from '../motor/compras.ts';
@@ -99,6 +99,7 @@ function aoClicar(ev: MouseEvent): void {
   if (t.id === 'outro') { abrirOutro(); return; }
   if (d.loja !== undefined) { abrirLoja(d.loja || null); return; }
   if (d.seg) { S.seg = d.seg as Segmento; render(); return; }
+  if (d.doc) { abrirDocumento(d.doc); return; }
   if (d.edit) { abrirEditar(d.edit); return; }
   if (d.grupo !== undefined) { abrirGrupo(d.grupo || null); return; }
   if (d.gsobe) { fazer(moverGrupo(cs, d.gsobe, -1)); return; }
