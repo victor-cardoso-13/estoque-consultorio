@@ -1,25 +1,21 @@
 /**
- * Conta e nuvem (Firebase). Este arquivo só é carregado depois que o jogo abre,
- * para o jogo abrir rápido e funcionar mesmo sem internet.
- *
- * Onde fica o progresso: jogadores/{uid}/jogos/estoque-consultorio
+ * Conta (Firebase Auth, e-mail + senha). Este arquivo só é carregado depois que o app abre,
+ * para ele abrir rápido e funcionar mesmo sem internet.
  */
 import { initializeApp } from 'firebase/app';
 import {
-  createUserWithEmailAndPassword, getAuth, onAuthStateChanged, sendPasswordResetEmail,
+  connectAuthEmulator, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, sendPasswordResetEmail,
   signInWithEmailAndPassword, signOut,
 } from 'firebase/auth';
-import { doc, getDoc, getFirestore, setDoc } from 'firebase/firestore';
 import { firebaseConfig } from './config.ts';
-/** O que cada jogo guarda na nuvem: qualquer objeto simples (defina o formato no jogo). */
-export type DadosNuvem = Record<string, unknown>;
 
-const JOGO = 'estoque-consultorio';
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+export const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
 auth.languageCode = 'pt'; // e-mail de "esqueci a senha" em português
-const banco = getFirestore(app);
+
+// Só para testar no computador, sem mexer no banco de verdade ("?emu" + emulador ligado). Nunca vale no site publicado.
+export const usandoEmulador = import.meta.env.DEV && new URLSearchParams(location.search).has('emu');
+if (usandoEmulador) connectAuthEmulator(auth, 'http://127.0.0.1:9199', { disableWarnings: true });
 
 export interface Usuario {
   uid: string;
@@ -28,7 +24,7 @@ export interface Usuario {
 
 /** Avisa quando alguém entra ou sai (e logo ao abrir, com quem já estava dentro). */
 export function observarConta(fn: (u: Usuario | null) => void) {
-  return onAuthStateChanged(auth, u => fn(u ? { uid: u.uid, email: u.email ?? '' } : null));
+  return onAuthStateChanged(auth, u => fn(u && !u.isAnonymous && u.email ? { uid: u.uid, email: u.email.trim().toLowerCase() } : null));
 }
 
 export async function entrar(email: string, senha: string) {
@@ -47,18 +43,7 @@ export async function esqueciSenha(email: string) {
   await sendPasswordResetEmail(auth, email.trim());
 }
 
-const lugar = (uid: string) => doc(banco, 'jogadores', uid, 'jogos', JOGO);
-
-export async function baixar(uid: string): Promise<DadosNuvem | null> {
-  const d = await getDoc(lugar(uid));
-  return d.exists() ? (d.data() as DadosNuvem) : null;
-}
-
-export async function enviar(uid: string, dados: DadosNuvem) {
-  await setDoc(lugar(uid), dados);
-}
-
-/** Mensagens do Firebase em português simples. */
+/** Mensagens do Firebase em português simples (nunca texto técnico na tela). */
 export function mensagemDeErro(e: unknown): string {
   const codigo = (e as { code?: string })?.code ?? '';
   const mensagens: Record<string, string> = {
@@ -73,6 +58,8 @@ export function mensagemDeErro(e: unknown): string {
     'auth/user-not-found': 'E-mail ou senha incorretos.',
     'auth/too-many-requests': 'Muitas tentativas seguidas. Espere alguns minutos e tente de novo.',
     'auth/network-request-failed': 'Sem internet agora. Tente de novo quando a internet voltar.',
+    'permission-denied': 'Sem permissão para isso. Saia e entre de novo.',
+    unavailable: 'Sem internet agora. O que você mexer fica guardado e sobem quando a internet voltar.',
   };
   return mensagens[codigo] ?? 'Algo deu errado. Tente de novo daqui a pouco.';
 }
