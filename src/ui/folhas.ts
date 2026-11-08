@@ -132,11 +132,12 @@ function corpo(f: Folha): string {
     const d = achar(f.id);
     if (!d) return '<p>Esse documento não existe mais.</p><button class="cancela" data-acao="fechar">Fechar</button>';
     const fm = d.formatos[Math.min(f.i, d.formatos.length - 1)]!;
+    prepararPdf(`documentos/${fm.arquivo}`, `${d.nome} ${fm.rotulo}`.replace(/[^A-Za-z0-9À-ÿ ·-]/g, ''));
     return `<h2>${e(d.nome)}</h2>
       <div class="previa"><img src="documentos/${e(d.previa)}" alt="Prévia de ${e(d.nome)}"><div class="d"><p>${e(d.nota)}</p><p>Papel: ${e(fm.rotulo)}</p></div></div>
       ${d.formatos.length > 1 ? `<div class="rot">Formato</div><div class="chips">${d.formatos.map((x, i) => `<button class="chip ${i === f.i ? 'sel' : ''}" data-fmt="${i}">${e(x.rotulo)}</button>`).join('')}</div>` : ''}
       <a class="ok" id="imprimir" href="documentos/${e(fm.arquivo)}" target="_blank" rel="noopener">Imprimir</a>
-      <p class="dica" style="text-align:center">No celular, abre o PDF pronto. Toque em Compartilhar e depois em Imprimir (AirPrint), ou salve nos Arquivos.</p>
+      <p class="dica" style="text-align:center">No celular, abre as opções do aparelho: toque em Imprimir (AirPrint) ou em Salvar nos Arquivos. No computador, abre o PDF.</p>
       <button class="cancela" data-acao="fechar">Fechar</button>`;
   }
   if (f.tipo === 'outro') {
@@ -334,9 +335,31 @@ function acao(a: string): void {
 }
 
 /** Clique dentro de uma folha. Devolve true se tratou. */
+/**
+ * Imprimir na Tela de Início: o iOS abre o PDF num visualizador SEM botões (nem voltar, nem imprimir). Então, quando o aparelho
+ * sabe compartilhar arquivo, o toque abre a folha de compartilhar do iPhone (tem Imprimir e Salvar nos Arquivos e volta ao app).
+ * O arquivo é baixado antes (do cache, funciona offline) para o toque chamar o compartilhar na hora. Sem isso, vale o link.
+ */
+const pdfs = new Map<string, File>();
+function prepararPdf(href: string, nome: string): void {
+  if (pdfs.has(href) || typeof navigator.canShare !== 'function') return;
+  fetch(href).then(r => (r.ok ? r.blob() : Promise.reject(new Error('pdf')))).then(b => {
+    pdfs.set(href, new File([b], `${nome}.pdf`, { type: 'application/pdf' }));
+  }).catch(() => {});
+}
+function imprimirCompartilhando(ev: MouseEvent, a: HTMLAnchorElement): void {
+  const href = a.getAttribute('href') ?? '';
+  const file = pdfs.get(href);
+  if (!file || !navigator.canShare?.({ files: [file] })) return; // sem suporte: o link abre o PDF
+  ev.preventDefault();
+  navigator.share({ files: [file], title: file.name }).catch(() => {});
+}
+
 export function aoClicarNaFolha(ev: MouseEvent): void {
   const f = F;
   if (!f) return;
+  const a = (ev.target as HTMLElement).closest<HTMLAnchorElement>('a#imprimir');
+  if (a) { imprimirCompartilhando(ev, a); return; }
   const t = (ev.target as HTMLElement).closest<HTMLElement>('button');
   if (!t || t.id === 'veu') return;
   const ds = t.dataset;
