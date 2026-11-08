@@ -342,6 +342,6 @@ describe('unidades em ordem de tela', () => {
   it('primeiro o grupo, depois a ordem do material, depois a ordem da cor', () => {
     const k = unidades(base()).map(x => x.k);
     expect(k.slice(0, 3)).toEqual(['luva', 'sugador', 'gaze']);
-    expect(k.slice(k.indexOf('resina') , k.indexOf('resina') + 6)).toEqual(['resina_A1', 'resina_A2', 'resina_A3', 'resina_A35', 'resina_B1', 'flow']);
+    expect(k.slice(k.indexOf('resina_A1'), k.indexOf('resina_A1') + 6)).toEqual(['resina_A1', 'resina_A2', 'resina_A3', 'resina_A35', 'resina_B1', 'flow']);
   });
 });
