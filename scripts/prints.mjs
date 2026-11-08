@@ -84,6 +84,13 @@ for (const [nome, [width, height]] of Object.entries(telas)) {
   await page.click('#outro'); await folha('[data-por]', '14-por-outro-material'); await fechar();
   await page.click('[data-chegou="consult"]'); await folha('#fv', '15-chegou-com-validade'); await fechar();
 
+  // ----- Documentos -----
+  await tab('documentos'); await foto('16-documentos');
+  await page.evaluate(() => { document.getElementById('conteudo').scrollTop = 99999; }); await espera(150); await foto('16b-documentos-fim');
+  await page.click('[data-doc="receituario"]'); await folha('#imprimir', '17-documento-receituario');
+  await page.click('[data-fmt="2"]'); await espera(250); await foto('17b-documento-receituario-formato-3'); await fechar();
+  await page.click('[data-doc="ortodontico"]'); await folha('#imprimir', '18-documento-ortodontico (so um formato)'.replace(/ .*/, '')); await fechar();
+
   // ----- Organizar -----
   await tab('organizar'); await foto('20-organizar-materiais');
   await page.click('[data-seg="grupos"]'); await espera(200); await foto('21-organizar-grupos');

@@ -34,7 +34,7 @@ export default defineConfig({
     // Vira "app": dá para pôr na Tela de Início e jogar sem internet.
     VitePWA({
       registerType: 'autoUpdate', // versão nova é baixada sozinha e vale na próxima vez que abrir
-      includeAssets: ['apple-touch-icon.png'],
+      includeAssets: ['apple-touch-icon.png', 'favicon-32.png'],
       manifest: {
         name: 'Estoque do Consultório',
         short_name: 'Estoque do Consultório',
@@ -43,8 +43,8 @@ export default defineConfig({
         start_url: '.',
         scope: '.',
         display: 'standalone',
-        background_color: '#fbf6ee',
-        theme_color: '#fbf6ee',
+        background_color: '#ffffff',
+        theme_color: '#ffffff',
         icons: [
           { src: 'icone-192.png', sizes: '192x192', type: 'image/png' },
           { src: 'icone-512.png', sizes: '512x512', type: 'image/png' },
@@ -52,7 +52,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,png,woff2}'],
+        globPatterns: ['**/*.{js,css,html,png,svg,woff2,pdf}'],
         maximumFileSizeToCacheInBytes: 3_000_000, // a parte do Firebase passa do limite padrão
       },
     }),

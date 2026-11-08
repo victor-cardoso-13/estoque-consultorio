@@ -5,8 +5,14 @@ Site: https://victor-cardoso-13.github.io/estoque-consultorio/ · repositório p
 Referência aprovada pela Andressa: `referencia/mock.html`, `referencia/notas.md`, `referencia/instrucoes-originais.md` (o pedido completo) e `referencia/prints/` (local, não vai ao git).
 
 ## A ideia
-Controle de estoque do consultório odontológico da Andressa (esposa do Victor). **Só ela usa** (um login, um consultório). Três abas: Estoque · Comprar · Organizar. O − de cada material é a ação principal (um toque + Desfazer). Tudo nasce "não contado" (`qtd: null`) e ela conta pelo 📋 Contar o estoque.
+Controle de estoque do consultório odontológico da Andressa (esposa do Victor). **Só ela usa** (um login, um consultório). Quatro abas: Estoque · Comprar · Documentos · Organizar. O − de cada material é a ação principal (um toque + Desfazer). Tudo nasce "não contado" (`qtd: null`) e ela conta pelo 📋 Contar o estoque.
 Fora desta versão: várias pessoas/convite, histórico, preços, notificações, código de barras, lotes com várias validades, pedido por WhatsApp.
+
+## Visual (identidade da Dra. Andressa Namba, desde a rodada 2)
+Branco + grafite `#5f5f62`, tinta `#3f3f42`, linhas de 1px `#bdbdc0`, sem gradiente nem sombra. Cormorant Garamond 500 (títulos, números) + Montserrat 400 (corpo), pelo npm (`@fontsource`). Estados dessaturados (mínimo/acabou/ok) só do app. Símbolo AN em `src/assets/simbolo-AN.svg` (`ui/marca.ts`). Figurinhas dos materiais continuam coloridas. Mantenha o bloco `@media (display-mode: standalone)` do `estilo.css`.
+
+## Aba Documentos
+`src/motor/documentos.ts` (catálogo; teste confere que os arquivos existem) · `ui/tela-documentos.ts` · folha em `folhas.ts`. PDFs em `public/documentos/` (A4/, A5/, previas/), no cache do PWA (offline). **Imprimir = `<a href target=_blank rel=noopener>`**, nada de `window.open`. Só em branco; sem dados de paciente. Os PDFs levam nome, CRO, endereço e telefone da consultória e o site é público.
 
 ## Código
 - `src/motor/`: regras puras, sem tela nem internet. Toda ação devolve **escritas** (`{'itens.luva.qtd': INCREMENTO(-1)}`); `aplicar` muda a cópia local, `inverso` gera o Desfazer. `lerConsultorio` valida tudo que chega da nuvem (e corta negativos).

@@ -6,7 +6,7 @@ import { aplicar, inverso } from '../motor/escritas.ts';
 import { lerConsultorio } from '../motor/ler.ts';
 import type { Consultorio, Escritas } from '../motor/tipos.ts';
 
-export type Aba = 'estoque' | 'comprar' | 'organizar';
+export type Aba = 'estoque' | 'comprar' | 'documentos' | 'organizar';
 export type Segmento = 'itens' | 'grupos' | 'lojas' | 'avisos';
 
 export interface Eu { uid: string; email: string }

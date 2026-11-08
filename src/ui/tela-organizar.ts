@@ -29,7 +29,7 @@ export function telaOrganizar(): string {
       listarLojas(cs).map(l => `<button class="org-l" data-loja="${e(l.id)}"><span class="e">${l.site ? '🌐' : '🏪'}</span><span class="tx"><b>${e(l.nome)}</b><small>${l.site ? e(l.site.replace(/^https:\/\//, '')) : 'sem site: compra no balcão'}</small></span><i>✎</i></button>`).join('') +
       `<button class="criar" data-loja="">+ Nova loja</button>`;
   }
-  return seg + `<p class="explica">Com quanto tempo de antecedência o cartão <b>⏳ Vence logo</b> avisa que um material vai vencer?</p>
+  return seg + `<p class="explica">Com quanto tempo de antecedência o cartão <b>Vence logo</b> avisa que um material vai vencer?</p>
     <div class="chips">${[15, 30, 60, 90].map(n => `<button class="chip ${cs.antes === n ? 'sel' : ''}" data-antes="${n}">${n} dias</button>`).join('')}</div>
     <p class="explica">O mínimo é de cada material (toque nele em <b>Materiais</b>). Quando a quantidade chega no mínimo, ele entra no <b>Comprar</b>.</p>
     <p class="explica">Conta: ${e(S.eu?.email ?? '')}</p><button class="sair" id="sairConta">Sair desta conta</button>`;
