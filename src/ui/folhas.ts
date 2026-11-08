@@ -135,7 +135,7 @@ function corpo(f: Folha): string {
     return `<h2>${e(d.nome)}</h2>
       <div class="previa"><img src="documentos/${e(d.previa)}" alt="Prévia de ${e(d.nome)}"><div class="d"><p>${e(d.nota)}</p><p>Papel: ${e(fm.rotulo)}</p></div></div>
       ${d.formatos.length > 1 ? `<div class="rot">Formato</div><div class="chips">${d.formatos.map((x, i) => `<button class="chip ${i === f.i ? 'sel' : ''}" data-fmt="${i}">${e(x.rotulo)}</button>`).join('')}</div>` : ''}
-      <a class="ok principal" id="imprimir" href="documentos/${e(fm.arquivo)}" target="_blank" rel="noopener">Imprimir</a>
+      <a class="ok" id="imprimir" href="documentos/${e(fm.arquivo)}" target="_blank" rel="noopener">Imprimir</a>
       <p class="dica" style="text-align:center">No celular, abre o PDF pronto. Toque em Compartilhar e depois em Imprimir (AirPrint), ou salve nos Arquivos.</p>
       <button class="cancela" data-acao="fechar">Fechar</button>`;
   }
